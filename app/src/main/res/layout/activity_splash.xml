@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/po"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <!-- University Logo -->
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:contentDescription="@null"
+        android:src="@drawable/img" />
+
+    <!-- University Name -->
+    <TextView
+        android:id="@+id/txtUniversity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="MULUNGUSHI UNIVERSITY"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- App Name -->
+
+    <!-- Loading Text -->
+    <TextView
+        android:id="@+id/txtApp"
+        android:layout_width="311dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="MULUNGUSHI REGISTRATION SYSTEM"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="loading"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp" />
+
+</LinearLayout>

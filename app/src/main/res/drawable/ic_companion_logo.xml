@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="100dp"
+    android:viewportWidth="120"
+    android:viewportHeight="100">
+
+    <!-- Faint background aura/wave behind the logo -->
+    <path
+        android:fillColor="#E8F1FF"
+        android:pathData="M20,50 Q40,25 60,35 T100,45 Q110,65 90,75 T30,70 Q10,65 20,50 Z" />
+
+    <!-- Left Person (Blue) -->
+    <path
+        android:fillColor="#0056D2"
+        android:pathData="M48,32 A10,10 0,1,1 48.01,32 Z M32,62 C32,53 40,46 48,46 C56,46 64,53 64,62 L64,70 L32,70 Z" />
+
+    <!-- Right Person (Green) -->
+    <path
+        android:fillColor="#00C853"
+        android:pathData="M70,40 A8,8 0,1,1 70.01,40 Z M58,65 C58,58 64,52 70,52 C76,52 82,58 82,65 L82,70 L58,70 Z" />
+
+</vector>

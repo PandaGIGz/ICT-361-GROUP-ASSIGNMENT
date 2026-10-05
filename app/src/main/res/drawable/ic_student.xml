@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Graduation Cap -->
+    <path
+        android:fillColor="#1A73E8"
+        android:pathData="M12,2L1,8l11,6l9,-4.91V15h2V8L12,2z"/>
+    <!-- Student Head & Shoulders -->
+    <path
+        android:fillColor="#1A73E8"
+        android:pathData="M12,11c-1.66,0 -3,1.34 -3,3s1.34,3 3,3s3,-1.34 3,-3S13.66,11 12,11zM12,18c-2.33,0 -7,1.17 -7,3.5V22h14v-0.5C19,19.17 14.33,18 12,18z"/>
+</vector>
