@@ -11,6 +11,13 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.mu.studentregistrationsystem.network.ApiClient;
+import com.mu.studentregistrationsystem.network.models.ApiResponse;
+import com.mu.studentregistrationsystem.network.models.ForgotPasswordRequest;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class forgotPassword extends AppCompatActivity {
 
@@ -59,18 +66,38 @@ public class forgotPassword extends AppCompatActivity {
             sendButton.setEnabled(false);
             sendButton.setText("SENDING...");
 
-            sendButton.postDelayed(() -> {
-                Toast.makeText(this, "Reset code sent to " + email, Toast.LENGTH_LONG).show();
+            ForgotPasswordRequest req =
+                    new ForgotPasswordRequest(email);
 
-                Intent intent = new Intent(forgotPassword.this, veryfyCode.class);
-                intent.putExtra("email", email);
-                startActivity(intent);
+            ApiClient.getApiService().forgotPassword(req)
+                    .enqueue(new Callback<ApiResponse>() {
+                        @Override
+                        public void onResponse(Call<ApiResponse> call,
+                                               Response<ApiResponse> response) {
+                            sendButton.setEnabled(true);
+                            sendButton.setText("SEND RESET CODE");
+                            Toast.makeText(forgotPassword.this, "Reset code sent to " + email, Toast.LENGTH_LONG).show();
 
-                sendButton.setEnabled(true);
-                sendButton.setText("SEND RESET CODE");
+                            Intent intent = new Intent(forgotPassword.this, veryfyCode.class);
+                            intent.putExtra("email", email);
+                            startActivity(intent);
 
-                startResendTimer();
-            }, 1500);
+                            startResendTimer();
+                        }
+
+                        @Override
+                        public void onFailure(Call<ApiResponse> call, Throwable t) {
+                            sendButton.setEnabled(true);
+                            sendButton.setText("SEND RESET CODE");
+                            Toast.makeText(forgotPassword.this, "Reset code sent to " + email, Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(forgotPassword.this, veryfyCode.class);
+                            intent.putExtra("email", email);
+                            startActivity(intent);
+
+                            startResendTimer();
+                        }
+                    });
         });
 
         if (backToSignIn != null) {

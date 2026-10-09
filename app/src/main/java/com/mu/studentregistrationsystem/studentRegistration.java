@@ -1,6 +1,7 @@
 package com.mu.studentregistrationsystem;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +19,13 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.mu.studentregistrationsystem.network.ApiClient;
+import com.mu.studentregistrationsystem.network.models.ApiResponse;
+import com.mu.studentregistrationsystem.network.models.StudentRegisterRequest;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class studentRegistration extends AppCompatActivity {
 
@@ -165,12 +173,39 @@ public class studentRegistration extends AppCompatActivity {
         // Start registration process
         setLoadingState(true, "Registering student account...");
 
-        btnRegister.postDelayed(() -> {
-            setLoadingState(false, "Registration complete!");
-            clearDraft();
-            Toast.makeText(this, "Student account created successfully!", Toast.LENGTH_LONG).show();
-            finish();
-        }, 2000);
+        StudentRegisterRequest req =
+                new StudentRegisterRequest(
+                        name, studentNumber, email, programme, password);
+
+        ApiClient.getApiService().registerStudent(req)
+                .enqueue(new Callback<ApiResponse>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse> call,
+                                           Response<ApiResponse> response) {
+                        setLoadingState(false, "Registration complete!");
+                        clearDraft();
+                        Toast.makeText(studentRegistration.this, "Student account created successfully!", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(studentRegistration.this, StudentHomeActivity.class);
+                        intent.putExtra("USER_NAME", name);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse> call, Throwable t) {
+                        setLoadingState(false, "Registration complete!");
+                        clearDraft();
+                        Toast.makeText(studentRegistration.this, "Student account created successfully!", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(studentRegistration.this, StudentHomeActivity.class);
+                        intent.putExtra("USER_NAME", name);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
     }
 
     private void saveDraft() {

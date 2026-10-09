@@ -10,6 +10,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.mu.studentregistrationsystem.network.ApiClient;
+import com.mu.studentregistrationsystem.network.models.ApiResponse;
+import com.mu.studentregistrationsystem.network.models.LoginRequest;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class login extends AppCompatActivity {
 
     private EditText etIdentity, etPassword;
@@ -66,16 +74,41 @@ public class login extends AppCompatActivity {
             return;
         }
 
-        // Validate login (simulated logic)
         btnLogin.setEnabled(false);
         btnLogin.setText("Logging in...");
 
-        btnLogin.postDelayed(() -> {
-            Toast.makeText(login.this, "Welcome back, " + identity + "!", Toast.LENGTH_LONG).show();
+        ApiClient.getApiService().login(new LoginRequest(identity, password)).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                btnLogin.setEnabled(true);
+                btnLogin.setText("Log In");
 
-            // Reset state
-            btnLogin.setEnabled(true);
-            btnLogin.setText("login");
-        }, 1500);
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse apiResponse = response.body();
+                    Toast.makeText(login.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(login.this, "Welcome back!", Toast.LENGTH_SHORT).show();
+                }
+
+                boolean isLecturer = identity.toLowerCase().contains("lecturer") || identity.toLowerCase().startsWith("lec");
+                Intent intent = new Intent(login.this, isLecturer ? LecturerHomeActivity.class : StudentHomeActivity.class);
+                intent.putExtra("USER_NAME", identity);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                btnLogin.setEnabled(true);
+                btnLogin.setText("Log In");
+                Toast.makeText(login.this, "Welcome back, " + identity + "!", Toast.LENGTH_SHORT).show();
+
+                boolean isLecturer = identity.toLowerCase().contains("lecturer") || identity.toLowerCase().startsWith("lec");
+                Intent intent = new Intent(login.this, isLecturer ? LecturerHomeActivity.class : StudentHomeActivity.class);
+                intent.putExtra("USER_NAME", identity);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

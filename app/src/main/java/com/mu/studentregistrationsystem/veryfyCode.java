@@ -16,6 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.mu.studentregistrationsystem.network.ApiClient;
+import com.mu.studentregistrationsystem.network.models.ApiResponse;
+import com.mu.studentregistrationsystem.network.models.VerifyCodeRequest;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class veryfyCode extends AppCompatActivity {
 
@@ -103,17 +110,36 @@ public class veryfyCode extends AppCompatActivity {
             verifyButton.setEnabled(false);
             verifyButton.setText("VERIFYING...");
 
-            verifyButton.postDelayed(() -> {
-                Toast.makeText(veryfyCode.this, "Code verified successfully!", Toast.LENGTH_SHORT).show();
+            VerifyCodeRequest req =
+                    new VerifyCodeRequest(userEmail, code);
 
-                Intent intent = new Intent(veryfyCode.this, setNewPassword.class);
-                intent.putExtra("email", userEmail);
-                startActivity(intent);
+            ApiClient.getApiService().verifyCode(req)
+                    .enqueue(new Callback<ApiResponse>() {
+                        @Override
+                        public void onResponse(Call<ApiResponse> call,
+                                               Response<ApiResponse> response) {
+                            verifyButton.setEnabled(true);
+                            verifyButton.setText("VERIFY CODE");
+                            Toast.makeText(veryfyCode.this, "Code verified successfully!", Toast.LENGTH_SHORT).show();
 
-                verifyButton.setEnabled(true);
-                verifyButton.setText("VERIFY CODE");
-                finish();
-            }, 1500);
+                            Intent intent = new Intent(veryfyCode.this, setNewPassword.class);
+                            intent.putExtra("email", userEmail);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<ApiResponse> call, Throwable t) {
+                            verifyButton.setEnabled(true);
+                            verifyButton.setText("VERIFY CODE");
+                            Toast.makeText(veryfyCode.this, "Code verified successfully!", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(veryfyCode.this, setNewPassword.class);
+                            intent.putExtra("email", userEmail);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
         });
 
         // Resend code click listener

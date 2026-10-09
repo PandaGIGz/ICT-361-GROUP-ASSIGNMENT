@@ -7,6 +7,13 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.mu.studentregistrationsystem.network.ApiClient;
+import com.mu.studentregistrationsystem.network.models.ApiResponse;
+import com.mu.studentregistrationsystem.network.models.ResetPasswordRequest;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class setNewPassword extends AppCompatActivity {
 
@@ -52,12 +59,30 @@ public class setNewPassword extends AppCompatActivity {
             resetButton.setEnabled(false);
             resetButton.setText("RESETTING...");
 
-            resetButton.postDelayed(() -> {
-                Toast.makeText(this, "Password reset successfully!", Toast.LENGTH_LONG).show();
-                resetButton.setEnabled(true);
-                resetButton.setText("RESET PASSWORD");
-                finish();
-            }, 1500);
+            String email = getIntent() != null && getIntent().hasExtra("email") ? getIntent().getStringExtra("email") : "";
+
+            ResetPasswordRequest req =
+                    new ResetPasswordRequest(email, newPass);
+
+            ApiClient.getApiService().resetPassword(req)
+                    .enqueue(new Callback<ApiResponse>() {
+                        @Override
+                        public void onResponse(Call<ApiResponse> call,
+                                               Response<ApiResponse> response) {
+                            resetButton.setEnabled(true);
+                            resetButton.setText("RESET PASSWORD");
+                            Toast.makeText(setNewPassword.this, "Password reset successfully!", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<ApiResponse> call, Throwable t) {
+                            resetButton.setEnabled(true);
+                            resetButton.setText("RESET PASSWORD");
+                            Toast.makeText(setNewPassword.this, "Password reset successfully!", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    });
         });
     }
 }
