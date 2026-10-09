@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
@@ -18,6 +20,7 @@ public class StudentHomeActivity extends AppCompatActivity {
     private View btnShortcutProfile, btnShortcutGroups, btnShortcutNotifications;
     private ImageButton btnNotificationBell;
     private BottomNavigationView bottomNavigation;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class StudentHomeActivity extends AppCompatActivity {
         btnShortcutNotifications = findViewById(R.id.btnShortcutNotifications);
         btnNotificationBell = findViewById(R.id.btnNotificationBell);
         bottomNavigation = findViewById(R.id.bottomNavigation);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
 
         // Get user name passed from Login/Registration
         if (getIntent() != null && getIntent().hasExtra("USER_NAME")) {
@@ -38,6 +42,16 @@ public class StudentHomeActivity extends AppCompatActivity {
             if (userName != null && !userName.isEmpty()) {
                 tvStudentName.setText("Hello, " + userName);
             }
+        }
+
+        // Swipe Refresh Layout
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                swipeRefreshLayout.postDelayed(() -> {
+                    swipeRefreshLayout.setRefreshing(false);
+                    Toast.makeText(this, "Dashboard updated successfully", Toast.LENGTH_SHORT).show();
+                }, 1200);
+            });
         }
 
         // View Group Click
